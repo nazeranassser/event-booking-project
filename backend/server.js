@@ -1,19 +1,33 @@
-// backend/server.js
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
 
-dotenv.config();
 const app = express();
+const pool = require('./config/db');
 
-app.use(cors());
-app.use(express.json());
+// Test DB connection
+pool.connect()
+  .then(() => {
+    console.log(' Connected to PostgreSQL');
 
-app.get("/", (req, res) => {
-  res.send("API is running");
-});
+    // Middleware
+    app.use(cors());
+    app.use(express.json());
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+    // Routes
+    app.use('/api/auth', require('./routes/auth'));
+    app.use('/api/events', require('./routes/events'));
+    app.use('/api/bookings', require('./routes/bookings'));
+    app.use('/api/profile', require('./routes/profile'));
+
+    // 404
+    app.use((req, res) => {
+      res.status(404).json({ message: "Route not found" });
+    });
+
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(` Server running on http://localhost:${PORT}`));
+  })
+  .catch((err) => {
+    console.error(' Failed to connect to PostgreSQL:', err.message);
+  });
