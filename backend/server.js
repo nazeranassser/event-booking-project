@@ -5,12 +5,17 @@ const cors = require('cors');
 const app = express();
 const pool = require('./config/db');
 
-// اختبار الاتصال بطريقة صحيحة
+const corsOptions = {
+  origin: 'http://localhost:3000', // عنوان الواجهة الأمامية
+  credentials: true,
+};
+
 pool.query('SELECT 1')
   .then(() => {
     console.log('Connected to PostgreSQL');
 
-    app.use(cors());
+    app.use(cors(corsOptions));  // هنا تفعيل CORS
+
     app.use(express.json());
 
     app.use('/api/auth', require('./routes/auth'));

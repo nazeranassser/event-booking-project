@@ -144,3 +144,19 @@ exports.getMyEvents = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+// مسار: GET /api/events/most-booked
+exports.getTop3MostBookedEvents = async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT e.*, COUNT(b.id) AS booking_count
+      FROM events e
+      LEFT JOIN bookings b ON e.id = b.event_id
+      GROUP BY e.id
+      ORDER BY booking_count DESC
+      LIMIT 3
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

@@ -64,9 +64,10 @@ export default function Profile() {
     }
   };
 
-  // تعديل إيفينت (هنا فقط رابط لصفحة التعديل)
-  const handleEditEvent = (eventId) => {
-    window.location.href = `/edit-event/${eventId}`;
+  // تسجيل خروج
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login"; // تأكد عندك صفحة تسجيل دخول بهذا المسار
   };
 
   if (loading) return <p>Loading profile...</p>;
@@ -74,6 +75,22 @@ export default function Profile() {
   return (
     <div style={{ padding: "20px" }}>
       <h2>My Profile</h2>
+
+      {/* زر تسجيل الخروج */}
+      <button
+        onClick={handleLogout}
+        style={{
+          background: "red",
+          color: "white",
+          padding: "8px 15px",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+          marginBottom: "20px"
+        }}
+      >
+        Logout
+      </button>
 
       <section>
         <h3>Booked Events</h3>
@@ -104,12 +121,6 @@ export default function Profile() {
             <div key={event.id} style={{ border: "1px solid #ccc", marginBottom: 10, padding: 10 }}>
               <h4>{event.title}</h4>
               <p>{new Date(event.date).toLocaleString()}</p>
-              <button
-                style={{ background: "orange", color: "white", padding: "5px 10px", marginRight: "5px" }}
-                onClick={() => handleEditEvent(event.id)}
-              >
-                Edit
-              </button>
               <button
                 style={{ background: "red", color: "white", padding: "5px 10px" }}
                 onClick={() => handleDeleteEvent(event.id)}
