@@ -1,13 +1,70 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root{
+  --accent-orange: #D2691E;
+  --accent-pink: #FF6F61;
+  --bg: #f8f8f8;
+  --card-bg: #fff;
+  --text: #222;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter, system-ui, Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
 }
+
+.container{
+  max-width:1100px;
+  margin:20px auto;
+  padding:0 16px;
+}
+
+/* Navbar */
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  padding:12px 16px;
+  background:var(--card-bg);
+  border-bottom:1px solid #eee;
+}
+.nav-left{display:flex;align-items:center;gap:10px}
+.logo{height:40px;width:40px;object-fit:cover;border-radius:6px}
+.brand{font-weight:700;font-size:18px}
+.nav-right .nav-link{
+  margin-left:12px;
+  text-decoration:none;
+  color:var(--text);
+  padding:6px 10px;
+  border-radius:6px;
+}
+.nav-right .nav-link.active{
+  background:var(--accent-orange);
+  color:#fff;
+}
+
+/* Sections */
+.section{margin:28px 0}
+.event-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap:16px;
+}
+
+/* Card */
+.card{
+  background:var(--card-bg);
+  border-radius:8px;
+  overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+  transition:transform .12s ease;
+}
+.card:hover{transform:translateY(-6px)}
+.card-img img{width:100%;height:150px;object-fit:cover}
+.card-body{padding:12px}
+.card-body h3{margin:0 0 6px;font-size:16px}
+.card-body .date{font-size:13px;color:#666}
+.card-body .desc{font-size:14px;color:#444;margin:8px 0}
+.card-body .book-count{font-weight:600;color:var(--accent-pink)}

@@ -2,7 +2,17 @@ const pool = require('../config/db');
 
 // إنشاء فعالية جديدة
 exports.createEvent = async (req, res) => {
-  const { title, description, date, location, category } = req.body;
+  const {
+    title,
+    description,
+    date,
+    location,
+    category,
+    total_seats,
+    ticket_price,
+    image_url,
+  } = req.body;
+
   const userId = req.user.id;
   const role = req.user.role;
 
@@ -12,15 +22,31 @@ exports.createEvent = async (req, res) => {
     }
 
     const result = await pool.query(
-      'INSERT INTO events (title, description, date, location, category, created_by) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [title, description, date, location, category, userId]
+      `INSERT INTO events
+      (title, description, date, location, category, created_by, total_seats, available_seats, ticket_price, image_url)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+      RETURNING *`,
+      [
+        title,
+        description,
+        date,
+        location,
+        category,
+        userId,
+        parseInt(total_seats),
+        parseInt(total_seats), // available_seats = total_seats في البداية
+        parseFloat(ticket_price),
+        image_url || null,
+      ]
     );
 
     res.status(201).json({ event: result.rows[0] });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // عرض جميع الفعاليات
 exports.getAllEvents = async (req, res) => {
@@ -98,6 +124,22 @@ exports.deleteEvent = async (req, res) => {
 
     await pool.query('DELETE FROM events WHERE id = $1', [eventId]);
     res.json({ message: 'Event deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// عرض جميع الفعاليات التي أنشأها المستخدم الحالي
+exports.getMyEvents = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const result = await pool.query(
+      'SELECT * FROM events WHERE created_by = $1 ORDER BY created_at DESC',
+      [userId]
+    );
+
+    res.json({ events: result.rows });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
