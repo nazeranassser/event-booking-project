@@ -11,7 +11,7 @@ export default function Footer() {
       color: "#555",
       fontSize: "14px"
     }}>
-      &copy; {new Date().getFullYear()} Your Company Name. All rights reserved.
+      &copy; {new Date().getFullYear()} Nazera. All rights reserved.
     </footer>
   );
 }
